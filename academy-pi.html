@@ -1349,7 +1349,7 @@ function backToInput() {
 }
 
 // ══════════════════════════════
-//  DEMO DATA (header button - 영어유치원)
+//  DEMO DATA (가상 예시 — 실제 학원 데이터 아님)
 // ══════════════════════════════
 let demoLoaded = false;
 
@@ -1384,29 +1384,28 @@ function clearAll() {
 }
 
 function loadDemo() {
-  document.getElementById('academyNameInput').value = '○○ 영어유치원';
+  document.getElementById('academyNameInput').value = '○○어학원 (예시)';
   updateSummary();
-  // trigger kids preset
+  // 가상의 예시 학원 — 실제 학원 데이터 아님
   revRows.forEach(r => document.getElementById(`rtr-${r.id}`)?.remove());
   revRows = [];
-  const kidsData = [
-    ['4세반',4,1795000],['5세반A',10,1795000],['5세반B',8,1795000],
-    ['6세반A',11,2145000],['6세반B',10,2145000],['7세반A',10,2145000],['7세반B',4,2145000],['7세반C',10,2145000],
-    ['방과후A',7,310000],['방과후B',8,310000],['방과후C',9,370000],
-    ['초등Tier1',7,390000],['초등Tier2',5,390000],['PETAMUS1',17,1000000],['PETAMUS2',21,620000],['PETAMUS3',1,500000]
+  const demoData = [
+    ['유치부 A',12,980000],['유치부 B',11,980000],
+    ['초등부 A',14,520000],['초등부 B',12,520000],['초등부 C',10,520000],
+    ['중등부 A',9,620000],['중등부 B',8,620000],
+    ['단기특강',10,300000]
   ];
-  kidsData.forEach(([n,c,f]) => addRevRow(n,c,f));
-  // set active button
+  demoData.forEach(([n,c,f]) => addRevRow(n,c,f));
   document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-  const kidsBtn = document.querySelector('[onclick="loadTypeDemo(\'kids\')"]');
-  if (kidsBtn) kidsBtn.classList.add('active');
+  const engBtn = document.querySelector('[onclick="loadTypeDemo(\'english\')"]');
+  if (engBtn) engBtn.classList.add('active');
 
-  setVal('empCnt', 20); setVal('freeCnt', 5); setVal('baseSal', 79200000); setVal('mealPay', 4000000); setVal('freelance', 21950000);
-  setVal('rent', 15730000); setVal('mgmt', 2640000); setVal('util', 3100000); setVal('housing', 4800000);
-  setVal('driver', 17900000); setVal('assist', 6000000); setVal('fuel', 508333);
-  setVal('mealFee', 2120000); setVal('matFee', 6774000); setVal('prog', 5600000);
-  setVal('rental', 640000); setVal('clean', 2302800); setVal('itFee', 960000);
-  setVal('swFee', 100000); setVal('cardUse', 3500000); setVal('annual', 4500000); setVal('misc', 1630000);
+  setVal('empCnt', 8); setVal('freeCnt', 3); setVal('baseSal', 22000000); setVal('mealPay', 1600000); setVal('freelance', 6500000);
+  setVal('rent', 5500000); setVal('mgmt', 800000); setVal('util', 600000); setVal('housing', 1000000);
+  setVal('driver', 2800000); setVal('assist', 700000); setVal('fuel', 300000);
+  setVal('mealFee', 700000); setVal('matFee', 2000000); setVal('prog', 800000);
+  setVal('rental', 250000); setVal('clean', 450000); setVal('itFee', 300000);
+  setVal('swFee', 100000); setVal('cardUse', 3000000); setVal('annual', 900000); setVal('misc', 300000);
   calcLab(); calcRent(); calcSht(); calcEtc(); updateRev();
 }
 
