@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>가족법인 대여금 한도 계산기 | 세무법인 선율</title>
+<meta name="description" content="가족법인(특정법인)에 대표·주주가 돈을 빌려줄 때, 주주 구성 그대로 넣으면 증여세 없이 가능한 대여 한도가 나옵니다. 세무법인 선율 무료 도구.">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1A2A4A; --blue:#2C4A7C; --lightblue:#EAF0F8;
+  --gold:#C9A84C; --red:#C0392B; --green:#1E8449;
+  --bg:#F7F9FC; --line:#DDE4EE; --text:#2B3548; --muted:#6B7688;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Pretendard',-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:0 14px 48px}
+.wrap{max-width:640px;margin:0 auto}
+
+.masthead{padding:26px 4px 18px;border-bottom:2px solid var(--navy);margin-bottom:20px}
+.masthead .firm{font-size:12px;letter-spacing:.22em;color:var(--gold);font-weight:700;margin-bottom:9px}
+.masthead h1{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:700;color:var(--navy);line-height:1.4;margin-bottom:9px}
+.masthead p{font-size:14px;color:var(--muted)}
+.masthead p b{color:var(--text);font-weight:600}
+
+.tabs{display:flex;gap:6px;margin-bottom:16px}
+.tab{flex:1;padding:11px 4px;border:1px solid var(--line);background:#fff;border-radius:8px;font-size:13.5px;font-weight:700;color:var(--muted);text-align:center;cursor:pointer;font-family:inherit;line-height:1.35}
+.tab small{display:block;font-size:11px;font-weight:400;margin-top:2px}
+.tab.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.tab.on small{color:var(--gold)}
+.tab:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 18px;margin-bottom:14px}
+.rate-badge{display:inline-flex;align-items:center;gap:7px;background:var(--lightblue);border-radius:6px;padding:7px 12px;font-size:13px;font-weight:700;color:var(--blue);margin-bottom:16px}
+.rate-badge .n{color:var(--navy);font-size:15px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px}
+.fld label{display:block;font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.fld label .opt{font-weight:400;color:var(--muted);font-size:11.5px}
+.fld input{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:8px;font-size:16px;font-family:inherit;font-weight:600;color:var(--text);background:#FDFDFE}
+.fld input:focus{outline:none;border-color:var(--blue)}
+.krw-sub{font-size:11.5px;color:var(--gold);font-weight:700;margin-top:4px;min-height:16px}
+
+.sdiv{font-size:13px;font-weight:800;color:var(--navy);margin:18px 0 8px;padding-left:9px;border-left:3px solid var(--gold)}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{background:var(--navy);color:#fff;padding:8px 4px;font-weight:600;font-size:11.5px}
+tbody td{border:1px solid var(--line);padding:4px;text-align:center}
+tbody input[type=text],tbody input[type=number]{width:100%;border:none;padding:7px 4px;text-align:center;font-size:13px;font-family:inherit;font-weight:600;background:transparent}
+tbody input:focus{outline:2px solid var(--blue);border-radius:4px}
+tbody input[type=checkbox]{width:17px;height:17px;accent-color:var(--navy)}
+.gTd{font-weight:600;font-size:12px}
+.jTd{font-weight:700;font-size:12px}
+.row-btns{margin-top:8px;display:flex;gap:6px}
+.row-btns button{padding:8px 14px;border-radius:7px;font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--blue)}
+.row-btns button:first-child{background:var(--navy);border-color:var(--navy);color:#fff}
+
+.summary{background:var(--bg);border-radius:10px;padding:14px;margin-top:16px}
+.sum-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center}
+.sum-grid .k{font-size:10.5px;color:var(--muted);line-height:1.35}
+.sum-grid .v{font-size:18px;font-weight:800;color:var(--navy);margin-top:3px;word-break:keep-all}
+.sum-grid .f{font-size:10px;color:var(--muted);margin-top:2px;word-break:keep-all}
+.gauge{height:12px;background:#E1E8F3;border-radius:6px;overflow:hidden;margin-top:12px}
+.gauge div{height:100%;width:0%;background:var(--green);transition:width .3s}
+.gauge-txt{font-size:11px;color:var(--muted);margin-top:4px}
+
+.law-note{background:#FFF9EC;border:1px solid #EAD9A8;border-radius:8px;padding:11px 13px;font-size:12px;line-height:1.75;color:#5B5138;margin-top:12px}
+.law-note b{color:var(--navy)}
+
+.cta{margin-top:14px;background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:12px;padding:20px 18px;text-align:center}
+.cta .lead{color:#fff;font-size:15px;font-weight:700;line-height:1.55;margin-bottom:4px}
+.cta .sub{color:#B9C6DC;font-size:13px;margin-bottom:14px}
+.kakao-btn{display:block;background:#FEE500;color:#191919;text-decoration:none;padding:14px;border-radius:8px;font-size:15px;font-weight:800;margin-bottom:8px}
+.tel-btn{display:block;background:transparent;color:#B9C6DC;text-decoration:none;padding:11px;border-radius:8px;border:1px solid rgba(255,255,255,.25);font-size:14px;font-weight:600}
+/* 전화 CTA — 050/070 확정 시 href="tel:번호" 넣고 display:none 제거 */
+
+.notes{margin-top:20px;padding:14px 4px 0;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);line-height:1.8}
+.notes b{color:var(--text)}
+.brand-foot{margin-top:16px;font-size:12px;color:var(--muted);text-align:center}
+.brand-foot .name{font-family:'Noto Serif KR',serif;color:var(--navy);font-weight:700;font-size:14px;letter-spacing:.08em}
+
+#pg-person{display:none}
+@media (max-width:430px){
+  .masthead h1{font-size:21px}
+  .fr{grid-template-columns:1fr}
+  .sum-grid .v{font-size:15px}
+  thead th{font-size:10.5px;padding:7px 2px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <div class="firm">세무법인 선율 ─ 무료 세금 계산 도구</div>
+  <h1 id="mainTitle">가족법인 대여금<br>한도 계산기</h1>
+  <p id="mainDesc">대표·주주가 가족법인에 돈을 빌려줄 때, <b>주주 구성 그대로 입력하면</b> 증여세 문제 없이 가능한 대여 한도가 바로 나옵니다.</p>
+</header>
+
+<div class="tabs" role="tablist">
+  <button class="tab on" data-pg="corp" role="tab" aria-selected="true">가족법인 대여<small>특정법인 · 주주별 판정</small></button>
+  <button class="tab" data-pg="person" role="tab" aria-selected="false">가족 간 대여<small>부모↔자녀 등 개인 간</small></button>
+</div>
+
+<!-- ════ 가족법인 대여 ════ -->
+<div id="pg-corp">
+  <div class="card">
+    <div class="rate-badge">세법상 적정이자율(당좌대출이자율) <span class="n">연 4.6%</span> 고정</div>
+    <div class="fr">
+      <div class="fld"><label>약정 이자율 (%) <span class="opt">— 무이자면 0</span></label>
+        <input type="number" id="c-ag" placeholder="0" step="0.1" inputmode="decimal" oninput="calcCorp()"></div>
+      <div class="fld"><label>현재 대여 잔액 (원)</label>
+        <input type="text" id="c-bal" placeholder="0" inputmode="numeric" oninput="fmtKrw(this,'c-balR');calcCorp()">
+        <div class="krw-sub" id="c-balR"></div></div>
+      <div class="fld"><label>추가 대여 예정액 (원) <span class="opt">— 없으면 비워두기</span></label>
+        <input type="text" id="c-add" placeholder="0" inputmode="numeric" oninput="fmtKrw(this,'c-addR');calcCorp()">
+        <div class="krw-sub" id="c-addR"></div></div>
+    </div>
+
+    <div class="sdiv">주주 구성 — 실제 주주명부대로 입력하세요</div>
+    <table>
+      <thead><tr>
+        <th style="width:24%">주주명</th><th style="width:17%">지분율(%)</th>
+        <th style="width:15%">돈 빌려준<br>본인</th><th style="width:24%">증여의제이익<br>(연)</th>
+        <th style="width:20%">판정<br>(1억 기준)</th>
+      </tr></thead>
+      <tbody id="shBody"></tbody>
+    </table>
+    <div class="row-btns">
+      <button type="button" onclick="addRow()">+ 주주 추가</button>
+      <button type="button" onclick="delRow()">− 마지막 행 삭제</button>
+    </div>
+
+    <div class="summary">
+      <div class="sum-grid">
+        <div><div class="k">과세 없는 대여 한도<br>(이 거래 단독 · 약식)</div>
+          <div class="v" id="c-limit">—</div>
+          <div class="f" id="c-limitF"></div></div>
+        <div><div class="k">잔액+예정액<br>합계</div>
+          <div class="v" id="c-total">—</div></div>
+        <div><div class="k">한도까지<br>여유액</div>
+          <div class="v" id="c-room">—</div>
+          <div class="f" id="c-roomS"></div></div>
+      </div>
+      <div class="gauge"><div id="c-bar"></div></div>
+      <div class="gauge-txt" id="c-barTxt"></div>
+    </div>
+
+    <div class="law-note">
+      <b>계산 방식</b> · 법인이익 = 대여금 × (4.6% − 약정이자율), 주주별 이익 = 법인이익 × 지분율. 빌려준 본인 지분 몫은 <b>자기증여라 과세 대상에서 제외</b>됩니다. 주주별 이익이 연 1억원 미만이면 증여세가 없습니다(상속세 및 증여세법 §45의5).<br>
+      <b>주의</b> · 법인과의 <b>다른 거래(부동산 무상임대, 저가 양도 등)가 있으면 이익을 합산해 판정</b>하므로 실제 한도는 줄어들 수 있습니다. 무상·저리 대여는 1년마다 새로 빌려준 것으로 보아 매년 재계산되며, 증자·지분 변동 시 한도가 달라집니다.
+    </div>
+  </div>
+</div>
+
+<!-- ════ 가족 간 대여 ════ -->
+<div id="pg-person">
+  <div class="card">
+    <div class="rate-badge">세법상 적정이자율 <span class="n">연 4.6%</span> 고정</div>
+    <div style="font-size:13px;color:var(--muted);margin:-6px 0 14px;line-height:1.6">자녀 집 마련·전세금·사업자금 — <b style="color:var(--text)">여러 명에게 나눠 빌리면</b> 한도가 어떻게 되는지까지 바로 확인하세요.</div>
+
+    <div class="fr" style="grid-template-columns:1fr">
+      <div class="fld"><label>약정 연이자율 (%) <span class="opt">— 무이자면 0 · 전체 공통</span></label>
+        <input type="number" id="p-ag" placeholder="0" step="0.1" inputmode="decimal" oninput="calcPerson()"></div>
+    </div>
+
+    <div class="sdiv">누구에게서 얼마를 빌리나요? (빌려주는 사람별 입력)</div>
+    <table>
+      <thead><tr>
+        <th style="width:26%">빌려주는 사람</th><th style="width:32%">금액(원)</th>
+        <th style="width:22%">이자차익(연)</th><th style="width:20%">판정<br>(1천만 기준)</th>
+      </tr></thead>
+      <tbody id="pLenders"></tbody>
+    </table>
+    <div class="row-btns">
+      <button type="button" onclick="pAddRow()">+ 사람 추가</button>
+      <button type="button" onclick="pDelRow()">− 마지막 행 삭제</button>
+    </div>
+
+    <div id="pGroupWarn"></div>
+
+    <div class="summary">
+      <div class="sum-grid">
+        <div><div class="k">1인당 대여 한도<br>(이 이자율 · 약식)</div>
+          <div class="v" id="p-limit">—</div>
+          <div class="f" id="p-limitF"></div></div>
+        <div><div class="k">대여 총액</div>
+          <div class="v" id="p-total">—</div></div>
+        <div><div class="k">이자차익 합계<br>(연간)</div>
+          <div class="v" id="p-gain">—</div></div>
+      </div>
+    </div>
+
+    <div class="summary" style="background:#FFF9EC;border:1px solid #EAD9A8">
+      <div style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:10px">✍️ 대여로 인정받기 위한 실무 체크</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;border-radius:8px;padding:11px 14px;margin-bottom:10px">
+        <span style="font-size:12.5px;color:var(--muted)">매월 이체할 이자 총액 (약정 기준)</span>
+        <b id="p-monthly" style="font-size:17px;color:var(--navy)">—</b>
+      </div>
+      <div id="p-monthlyNote" style="font-size:12px;color:#5B5138;line-height:1.75">
+        ① <b>차용증은 사람별로 각각 작성</b> — 대여일·금액·이자율·상환일 명시, 내용증명·공증으로 날짜를 박아두면 확실합니다.<br>
+        ② <b>빌려주는 돈은 각자 본인 명의 계좌에서 직접</b> — 어머니가 빌려주는 돈이 아버지 계좌에서 건너온 돈이면, 실질상 아버지 1인의 대여로 재구성되어 각각 판정 자체가 무너질 수 있습니다.<br>
+        ③ <b>상환도 각각 분리해서</b> — 아버지 몫은 아버지 계좌로, 어머니 몫은 어머니 계좌로. 현금 수수는 기록이 없어 인정이 어렵습니다.<br>
+        ④ <b>이자를 받으면 이자소득세 문제</b>가 따로 생깁니다(원천징수 27.5%) — 이자율 설계는 검토가 필요한 지점입니다.
+      </div>
+    </div>
+
+    <div class="law-note">
+      <b>계산 방식</b> · 이자차익 = 금액 × (4.6% − 약정이자율). 빌려주는 <b>사람별로 각각</b> 연 1천만원 미만이면 과세 제외로 보는 것이 일반적 실무 해석입니다(상속세 및 증여세법 §41의4).<br>
+      <b>주의 ①</b> · 부모에게서 각각 빌리는 경우 <b>채권자별로 각각 판정</b>하는 것이 국세청 해석사례(서면-2016-상속증여-4687, 서면-2018-상속증여-2137)에 부합하는 우세 해석입니다. 다만 부부 합산 여부를 정면으로 확답한 예규는 아직 없어, 고액이라면 사전 검토를 권합니다.<br>
+      <b>주의 ②</b> · 반대로 한 사람이 여러 명(자녀·사위 등)에게 빌려줄 때는 <b>받는 사람별로 각각</b> 판정합니다.<br>
+      <b>주의 ③</b> · 차용증·이자 이체 흔적이 없으면 대여 자체가 부인되어 <b>원금 전체가 증여로</b> 과세될 수 있습니다. 1년 초과 대여는 매년 재계산·합산됩니다.
+    </div>
+  </div>
+</div>
+
+<div class="cta">
+  <div class="lead">한도가 아슬아슬하거나, 법인과 다른 거래가 섞여 있다면</div>
+  <div class="sub">화면을 캡처해서 보내주시면 대표세무사가 직접 검토해드립니다.</div>
+  <a class="kakao-btn" href="https://open.kakao.com/o/stCoJKii" target="_blank" rel="noopener">💬 카카오톡 1:1 무료 검토 요청</a>
+  <a class="tel-btn" href="#" style="display:none">📞 전화 상담</a>
+</div>
+
+<div class="notes">
+  <b>안내</b> · 입력하신 내용은 어디에도 저장·전송되지 않으며, 계산은 이 화면 안에서만 이루어집니다.<br>
+  · 적정이자율 연 4.6%는 법인세법 시행규칙상 당좌대출이자율(2026년 기준)이며, 세법 개정 시 변동될 수 있습니다.<br>
+  · 본 계산기는 해당 대여 거래 단독 기준의 약식 판정으로, 다른 거래와의 합산·특정법인 해당 여부·상환 조건 등에 따라 실제 과세 여부와 한도는 달라질 수 있습니다. 실제 실행 전에는 반드시 세무 전문가의 검토를 받으시기 바랍니다.
+</div>
+
+<div class="brand-foot">
+  <div class="name">세무법인 선율</div>
+  학원·교육사업 전문 세무법인 · 서울 광진구
+</div>
+
+</div>
+
+<script>
+var RATE = 0.046;      // 당좌대출이자율 (법인세법 시행규칙 §43)
+var GIFT_MIN = 10000000;   // 상증법 §41의4 (연 1천만)
+var SH_MIN = 100000000;    // 상증법 §45의5 (주주별 연 1억)
+
+// ── 접속 카운터 자리 ──────────────────────────────
+// 공개용 Firebase 프로젝트 생성 후 주석 해제 & 프로젝트ID 입력
+// fetch('https://<프로젝트ID>-default-rtdb.asia-southeast1.firebasedatabase.app/hits/loancalc.json',
+//   {method:'PUT', body: JSON.stringify({'.sv':{'increment':1}})}).catch(function(){});
+// ─────────────────────────────────────────────────
+
+function num(s){return parseFloat(String(s).replace(/[^0-9.]/g,''))||0;}
+function comma(n){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function eok(n){
+  if(n>=100000000) return (n/100000000).toFixed(2).replace(/\.?0+$/,'')+'억';
+  return comma(n)+'원';
+}
+function korean(n){
+  if(!n) return '';
+  var e=Math.floor(n/100000000), m=Math.floor((n%100000000)/10000), r=n%10000, s='';
+  if(e) s+=comma(e)+'억 ';
+  if(m) s+=comma(m)+'만 ';
+  if(r||!s) s+=comma(r);
+  return s.trim()+'원';
+}
+function fmtKrw(el, subId){
+  var raw=String(el.value).replace(/[^0-9]/g,'');
+  var n=raw?parseInt(raw,10):0;
+  el.value=n?comma(n):'';
+  document.getElementById(subId).textContent=n?korean(n):'';
+}
+
+/* ═══ 가족법인 ═══ */
+function rowHTML(name,pct,lender){
+  return '<tr>'
+    +'<td><input type="text" value="'+name+'" placeholder="주주명"></td>'
+    +'<td><input type="number" value="'+pct+'" placeholder="0" step="0.1" inputmode="decimal" oninput="calcCorp()"></td>'
+    +'<td><input type="checkbox" '+(lender?'checked':'')+' onchange="calcCorp()" aria-label="대여자 본인"></td>'
+    +'<td class="gTd">—</td>'
+    +'<td class="jTd">—</td></tr>';
+}
+function addRow(){document.getElementById('shBody').insertAdjacentHTML('beforeend',rowHTML('','',false));calcCorp();}
+function delRow(){var b=document.getElementById('shBody');if(b.rows.length>1){b.deleteRow(-1);calcCorp();}}
+
+function calcCorp(){
+  var ag=num(document.getElementById('c-ag').value)/100;
+  var diff=Math.max(RATE-ag,0);
+  var total=num(document.getElementById('c-bal').value)+num(document.getElementById('c-add').value);
+  var gain=total*diff, maxPct=0;
+  document.querySelectorAll('#shBody tr').forEach(function(tr){
+    var pct=num(tr.cells[1].querySelector('input').value)/100;
+    var isLender=tr.cells[2].querySelector('input').checked;
+    var g=isLender?0:gain*pct;
+    var gTd=tr.querySelector('.gTd'), jTd=tr.querySelector('.jTd');
+    gTd.textContent=isLender?'자기증여 제외':(pct?comma(g)+'원':'—');
+    if(isLender){jTd.textContent='—';jTd.style.color='';}
+    else if(!pct){jTd.textContent='—';jTd.style.color='';}
+    else if(g>=SH_MIN){jTd.textContent='과세 위험';jTd.style.color='#C0392B';}
+    else{jTd.textContent='비과세';jTd.style.color='#1E8449';}
+    if(!isLender&&pct>maxPct)maxPct=pct;
+  });
+  var limit=(maxPct>0&&diff>0)?SH_MIN/maxPct/diff:(maxPct>0&&diff<=0?Infinity:0);
+  var limitEl=document.getElementById('c-limit');
+  var limitFEl=document.getElementById('c-limitF');
+  if(limit===Infinity){
+    limitEl.textContent='제한 없음';
+    limitFEl.textContent='약정이자율이 4.6% 이상';
+  }else{
+    limitEl.textContent=limit?eok(limit):'—';
+    limitFEl.textContent=limit?('= 1억 ÷ '+(maxPct*100).toFixed(1)+'% ÷ '+(diff*100).toFixed(1)+'%p'):'';
+  }
+  document.getElementById('c-total').textContent=total?eok(total):'—';
+  var room=isFinite(limit)?limit-total:Infinity;
+  var roomEl=document.getElementById('c-room');
+  var roomS=document.getElementById('c-roomS');
+  if(limit===Infinity){roomEl.textContent='제한 없음';roomEl.style.color='#1E8449';roomS.textContent='';}
+  else if(!limit){roomEl.textContent='—';roomEl.style.color='';roomS.textContent='';}
+  else{
+    roomEl.textContent=room>=0?eok(room):'초과 '+eok(-room);
+    roomEl.style.color=room>=0?'#1E8449':'#C0392B';
+    roomS.textContent=room>=0?'한도 이내':'한도 초과 — 과세 위험';
+  }
+  var bar=document.getElementById('c-bar');
+  var pctUse=(isFinite(limit)&&limit)?Math.min(total/limit*100,100):0;
+  bar.style.width=pctUse+'%';
+  bar.style.background=(isFinite(limit)&&total>limit)?'#C0392B':(pctUse>=80?'#C9A84C':'#1E8449');
+  document.getElementById('c-barTxt').textContent=(isFinite(limit)&&limit&&total)?('한도 사용률 '+(total/limit*100).toFixed(1)+'%'):'';
+}
+
+/* ═══ 가족 간 (다인 시뮬레이션) ═══ */
+var REL_GROUPS = {'아버지':'부모','어머니':'부모','조부':'조부모','조모':'조부모','외조부':'외조부모','외조모':'외조부모'};
+var RELS = ['아버지','어머니','조부','조모','외조부','외조모','장인','장모','배우자','형제자매','자녀','기타'];
+
+function pRowHTML(rel, amt){
+  var opts = RELS.map(function(r){return '<option'+(r===rel?' selected':'')+'>'+r+'</option>';}).join('');
+  return '<tr>'
+    +'<td><select onchange="calcPerson()" style="width:100%;border:none;padding:8px 2px;text-align:center;font-size:13px;font-family:inherit;font-weight:600;background:transparent">'+opts+'</select></td>'
+    +'<td><input type="text" value="'+(amt||'')+'" placeholder="0" inputmode="numeric" oninput="pFmt(this);calcPerson()"></td>'
+    +'<td class="gTd">—</td>'
+    +'<td class="jTd">—</td></tr>';
+}
+function pFmt(el){
+  var raw=String(el.value).replace(/[^0-9]/g,'');
+  el.value=raw?comma(parseInt(raw,10)):'';
+}
+function pAddRow(){document.getElementById('pLenders').insertAdjacentHTML('beforeend',pRowHTML('어머니',''));calcPerson();}
+function pDelRow(){var b=document.getElementById('pLenders');if(b.rows.length>1){b.deleteRow(-1);calcPerson();}}
+
+function calcPerson(){
+  var ag=num(document.getElementById('p-ag').value)/100;
+  var diff=Math.max(RATE-ag,0);
+  var total=0, gainTotal=0;
+  var groups={};
+  document.querySelectorAll('#pLenders tr').forEach(function(tr){
+    var rel=tr.cells[0].querySelector('select').value;
+    var amt=num(tr.cells[1].querySelector('input').value);
+    var g=amt*diff;
+    total+=amt; gainTotal+=g;
+    var gTd=tr.querySelector('.gTd'), jTd=tr.querySelector('.jTd');
+    gTd.textContent=amt?comma(g)+'원':'—';
+    if(!amt){jTd.textContent='—';jTd.style.color='';}
+    else if(g>=GIFT_MIN){jTd.textContent='과세 위험';jTd.style.color='#C0392B';}
+    else{jTd.textContent='비과세';jTd.style.color='#1E8449';}
+    var grp=REL_GROUPS[rel];
+    if(grp&&amt){
+      if(!groups[grp])groups[grp]={amt:0,members:[],eachOk:true};
+      groups[grp].amt+=amt;
+      groups[grp].members.push(rel);
+      if(g>=GIFT_MIN)groups[grp].eachOk=false;
+    }
+  });
+
+  /* 동일인(부부) 합산 경고 */
+  var warnHtml='';
+  Object.keys(groups).forEach(function(k){
+    var gr=groups[k];
+    if(gr.members.length<2)return;
+    var combined=gr.amt*diff;
+    if(combined>=GIFT_MIN&&gr.eachOk){
+      warnHtml+='<div style="background:#FFF9EC;border:1px solid #EAD9A8;border-radius:8px;padding:11px 13px;font-size:12.5px;line-height:1.7;color:#5B5138;margin-top:10px">'
+        +'ℹ️ <b>'+gr.members.join('·')+'</b>에게서 나눠 빌리는 구조 — 채권자별 <b>각각 판정이 우세 해석</b>입니다(국세청 해석사례 서면-2016-상속증여-4687 취지). 다만 부부 합산을 정면으로 확답한 예규는 없어, 합산 시 이자차익이 연 '+comma(combined)+'원인 이 구조는 금액이 크다면 실행 전 검토를 권합니다.</div>';
+    }
+  });
+  document.getElementById('pGroupWarn').innerHTML=warnHtml;
+
+  /* 요약 */
+  var limit=diff>0?GIFT_MIN/diff:Infinity;
+  document.getElementById('p-limit').textContent=isFinite(limit)?eok(limit):'제한 없음';
+  document.getElementById('p-limitF').textContent=isFinite(limit)?('= 1천만 ÷ '+(diff*100).toFixed(1)+'%p'):'약정이자율이 4.6% 이상';
+  document.getElementById('p-total').textContent=total?eok(total):'—';
+  document.getElementById('p-gain').textContent=total?comma(gainTotal)+'원':'—';
+
+  /* 월 이자 + 무이자 경고 */
+  var mEl=document.getElementById('p-monthly');
+  if(!total){mEl.textContent='—';}
+  else if(ag>0){mEl.textContent=comma(total*ag/12)+'원/월';}
+  else{mEl.textContent='무이자 약정';}
+  var note1=document.getElementById('p-monthlyNote');
+  var zeroLine=document.getElementById('p-zeroLine');
+  if(total&&ag<=0){
+    if(!zeroLine){
+      note1.insertAdjacentHTML('afterbegin','<div id="p-zeroLine" style="background:#FBF1EF;border-radius:6px;padding:8px 10px;margin-bottom:8px;color:#C0392B;font-weight:600">무이자도 한도 내에서는 가능하지만, 이자 이체 기록이 없는 만큼 <u>원금 분할상환 이체 기록</u>을 남겨야 대여로 인정받기 유리합니다.</div>');
+    }
+  }else if(zeroLine){zeroLine.remove();}
+}
+
+/* ═══ 탭 ═══ */
+document.querySelectorAll('.tab').forEach(function(t){
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on');x.setAttribute('aria-selected','false');});
+    t.classList.add('on');t.setAttribute('aria-selected','true');
+    if(t.dataset.pg==='person'){
+      document.getElementById('mainTitle').innerHTML='가족 간 대여금<br>증여세 계산기';
+      document.getElementById('mainDesc').innerHTML='자녀에게 목돈을 빌려줄 때, <b>얼마까지 · 이자를 얼마나 받아야</b> 증여세 문제 없이 대여로 인정받는지 바로 확인하세요.';
+      calcPerson();
+    }else{
+      document.getElementById('mainTitle').innerHTML='가족법인 대여금<br>한도 계산기';
+      document.getElementById('mainDesc').innerHTML='대표·주주가 가족법인에 돈을 빌려줄 때, <b>주주 구성 그대로 입력하면</b> 증여세 문제 없이 가능한 대여 한도가 바로 나옵니다.';
+    }
+    document.getElementById('pg-corp').style.display=t.dataset.pg==='corp'?'block':'none';
+    document.getElementById('pg-person').style.display=t.dataset.pg==='person'?'block':'none';
+  });
+});
+
+/* 초기 주주 3행: 본인(대여자) 체크 상태로 시작 */
+document.getElementById('shBody').innerHTML=rowHTML('본인','',true)+rowHTML('','',false)+rowHTML('','',false);
+calcCorp();
+/* 개인 탭 초기 2행: 아버지·어머니 */
+document.getElementById('pLenders').innerHTML=pRowHTML('아버지','')+pRowHTML('어머니','');
+calcPerson();
+</script>
+</body>
+</html>
