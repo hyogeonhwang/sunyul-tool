@@ -1256,24 +1256,24 @@ function buildInsights(t, students) {
 
   // 수익율
   if (pr < 0)
-    ins.push({ type:'bad', text:`<strong>순손실 구조 (수익율 ${(pr*100).toFixed(1)}%)</strong> — 현재 비용 구조로는 매달 손실이 발생합니다. 학원업 평균 영업이익률은 한 자릿수 후반~10% 초반대로, 현재 수익 구조 전반적인 점검이 시급합니다.` });
+    ins.push({ type:'bad', text:`<strong>순손실 구조 (수익율 ${(pr*100).toFixed(1)}%)</strong> — 현재 비용 구조로는 매달 손실이 발생합니다. 학원업 평균 영업이익률은 10~20% 내외로, 현재 수익 구조 전반적인 점검이 시급합니다.` });
   else if (pr < 0.05)
-    ins.push({ type:'warn', text:`<strong>수익율 ${(pr*100).toFixed(1)}%</strong> — 학원업 평균(한 자릿수 후반~10% 초반)을 크게 하회합니다. 연간 일시 비용(행사비·수리비·세금 등) 감안 시 실질 손실 가능성이 있습니다. 비용 구조 점검이 필요합니다.` });
+    ins.push({ type:'warn', text:`<strong>수익율 ${(pr*100).toFixed(1)}%</strong> — 학원업 평균(10~20% 내외)을 크게 하회합니다. 연간 일시 비용(행사비·수리비·세금 등) 감안 시 실질 손실 가능성이 있습니다. 비용 구조 점검이 필요합니다.` });
   else if (pr < 0.1)
-    ins.push({ type:'warn', text:`<strong>수익율 ${(pr*100).toFixed(1)}%</strong> — 학원업 평균(한 자릿수 후반~10% 초반) 하단 범위입니다. 연간 일시 비용과 세금을 감안하면 실질 수익은 더 낮아질 수 있어 개선 여지를 검토해 보시기 바랍니다.` });
+    ins.push({ type:'warn', text:`<strong>수익율 ${(pr*100).toFixed(1)}%</strong> — 학원업 평균(10~20% 내외)에 미치지 못합니다. 연간 일시 비용과 세금을 감안하면 실질 수익은 더 낮아질 수 있어 개선 여지를 검토해 보시기 바랍니다.` });
   else if (pr < 0.15)
-    ins.push({ type:'ok', text:`<strong>수익율 ${(pr*100).toFixed(1)}%</strong> — 운영이 잘 되는 학원 수준(10~15%)으로, 학원업 평균(한 자릿수 후반~10% 초반) 대비 양호한 수익 구조입니다.` });
+    ins.push({ type:'ok', text:`<strong>수익율 ${(pr*100).toFixed(1)}%</strong> — 학원업 평균(10~20% 내외) 범위 내의 안정적인 수익 구조입니다.` });
   else
-    ins.push({ type:'ok', text:`<strong>수익율 ${(pr*100).toFixed(1)}%</strong> — 상당히 우수한 수준(15% 이상)입니다. 대형 입시학원 우수 사례(14~16%대)와 비견될 만한 수익성으로, 고정비 대비 매출 구조가 효율적으로 운영되고 있습니다.` });
+    ins.push({ type:'ok', text:`<strong>수익율 ${(pr*100).toFixed(1)}%</strong> — 학원업 평균(10~20% 내외) 중상단의 우수한 수준입니다. 고정비 대비 매출 구조가 효율적으로 운영되고 있습니다.` });
 
   // 인건비 비율
   if (labR > 0) {
-    if (labR > 0.8)
-      ins.push({ type:'bad', text:`<strong>인건비 비율 ${(labR*100).toFixed(0)}%</strong> — 매우 높은 수준입니다. 학원업 통상 범위(60~80%)를 상회합니다. 인력 구조 전면 재검토가 필요합니다.` });
-    else if (labR > 0.6)
-      ins.push({ type:'warn', text:`<strong>인건비 비율 ${(labR*100).toFixed(0)}%</strong> — 학원업 통상 범위(60~80%) 내에 있습니다. 매출 확대 또는 인력 효율화를 통해 관리가 필요합니다.` });
+    if (labR > 0.6)
+      ins.push({ type:'bad', text:`<strong>인건비 비율 ${(labR*100).toFixed(0)}%</strong> — 높은 수준입니다. 학원업 통상 범위(40~60%)를 상회합니다. 매출 확대 또는 인력 구조 재검토가 필요합니다.` });
+    else if (labR > 0.4)
+      ins.push({ type:'ok', text:`<strong>인건비 비율 ${(labR*100).toFixed(0)}%</strong> — 학원업 통상 범위(40~60%) 내에 있습니다.` });
     else
-      ins.push({ type:'ok', text:`<strong>인건비 비율 ${(labR*100).toFixed(0)}%</strong> — 양호한 수준입니다. 학원업 통상 범위(60~80%) 대비 잘 관리되고 있습니다.` });
+      ins.push({ type:'ok', text:`<strong>인건비 비율 ${(labR*100).toFixed(0)}%</strong> — 양호한 수준입니다. 학원업 통상 범위(40~60%) 대비 잘 관리되고 있습니다.` });
   }
 
   // 임대료 비율
@@ -1304,13 +1304,13 @@ function buildInsights(t, students) {
     vColor = '#F87171';
     vTitle = '이 학원의 1순위 과제는 수익 구조입니다';
     vBody = `매달 약 ${won2(t.profit)} 손실이 쌓이는 구조입니다. ` +
-      (labR <= 0.8 && rntR <= 0.2
+      (labR <= 0.6 && rntR <= 0.2
         ? '인건비·임대료 비중은 통상 범위 안이므로, 문제는 비용이 아니라 매출(원생 수·수강료) 쪽입니다.'
         : '아래 항목 중 붉은색 표시가 손실의 주범입니다.');
-  } else if (labR > 0.8) {
+  } else if (labR > 0.6) {
     vColor = '#F87171';
     vTitle = '이 학원의 1순위 과제는 인건비 구조입니다';
-    vBody = `흑자이지만 인건비가 매출의 ${(labR*100).toFixed(0)}%로 통상 상단(80%)을 넘습니다. 매출이 조금만 흔들려도 적자로 전환되는 구조입니다.`;
+    vBody = `흑자이지만 인건비가 매출의 ${(labR*100).toFixed(0)}%로 통상 상단(60%)을 넘습니다. 매출이 조금만 흔들려도 적자로 전환되는 구조입니다.`;
   } else if (rntR > 0.2) {
     vColor = '#FBBF24';
     vTitle = '이 학원의 1순위 과제는 임대료 부담입니다';
@@ -1597,7 +1597,7 @@ function buildCompareSection(current) {
       </tbody>
     </table>
     <div style="margin-top:12px;padding:10px 14px;background:rgba(44,74,124,.15);border-radius:8px;font-size:11px;color:var(--muted)">
-      ● 인건비 비율 학원업 통상 범위: 60~80% &nbsp;|&nbsp; ● 임대료 비율: 15% 안팎 무난 · 20% 초과 부담 &nbsp;|&nbsp; ● 수익율: 5~10% 평균 · 10~15% 양호 · 15% 이상 우수
+      ● 인건비 비율 학원업 통상 범위: 40~60% &nbsp;|&nbsp; ● 임대료 비율: 15% 안팎 무난 · 20% 초과 부담 &nbsp;|&nbsp; ● 수익율: 학원업 평균 10~20% 내외
     </div>`;
 }
 </script>
