@@ -393,7 +393,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--dark);color:var(--cr
   .sec-chevron{padding:6px}
 
   /* 플로팅 계산기 축소 */
-  #calcFab{bottom:14px;right:12px;transform:scale(.92)}
 
   /* 보고서 화면 KPI 숫자 축소 */
   .kpi-val{font-size:22px !important}
@@ -402,6 +401,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--dark);color:var(--cr
   /* 차트 높이 제한 */
   canvas{max-height:260px}
 }
+
+#kakaoFab{position:fixed;bottom:24px;right:24px;z-index:500;display:flex;align-items:center;gap:7px;background:#FEE500;border-radius:24px;padding:12px 18px;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.35);transition:transform .15s}
+#kakaoFab:hover{transform:translateY(-2px)}
+#kakaoFab .kf-ico{font-size:19px;line-height:1}
+#kakaoFab .kf-txt{font-size:14px;font-weight:700;color:#3A1D1D;letter-spacing:-.2px}
+@media(max-width:640px){#kakaoFab{bottom:16px;right:16px;padding:11px 15px}#kakaoFab .kf-txt{font-size:13px}}
 </style>
 </head>
 <body>
@@ -1607,157 +1612,13 @@ function buildCompareSection(current) {
 </script>
 
 <!-- ===================== FLOATING CALCULATOR ===================== -->
-<style>
-#calcFab{
-  position:fixed;bottom:28px;right:28px;z-index:500;
-  width:52px;height:52px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold),#8A5A00);
-  border:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;
-  box-shadow:0 4px 20px rgba(201,168,76,.5);
-  transition:all .25s;
-}
-#calcFab:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(201,168,76,.7)}
-#calcModal{
-  display:none;position:fixed;bottom:92px;right:28px;z-index:499;
-  width:260px;
-  background:var(--panel);border:1px solid var(--border);border-radius:16px;
-  box-shadow:0 16px 48px rgba(0,0,0,.6);
-  overflow:hidden;animation:calcIn .2s ease;
-}
-@keyframes calcIn{from{opacity:0;transform:scale(.92) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
-#calcDisplay{
-  padding:14px 16px 10px;
-  background:rgba(0,0,0,.3);
-  border-bottom:1px solid var(--borderfaint);
-}
-#calcExpr{
-  font-size:11px;color:var(--muted);min-height:16px;text-align:right;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-#calcScreen{
-  font-family:'Noto Serif KR',serif;font-size:26px;font-weight:700;
-  color:var(--white);text-align:right;margin-top:4px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  cursor:text;
-}
-#calcWon{font-size:11px;color:var(--gold);text-align:right;margin-top:2px;min-height:15px}
-.calc-grid{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:1px;background:rgba(44,74,124,.2);padding:1px;
-}
-.ck{
-  background:var(--panel);border:none;
-  padding:15px 0;font-size:16px;
-  cursor:pointer;transition:background .15s;color:var(--cream);
-  font-family:'Noto Sans KR',sans-serif;
-}
-.ck:hover{background:rgba(44,74,124,.5)}
-.ck:active{background:rgba(44,74,124,.8)}
-.ck.op{color:var(--gold);font-size:18px}
-.ck.fn{color:var(--muted2);font-size:13px}
-.ck.eq{background:rgba(201,168,76,.2);color:var(--gold);font-size:20px;font-weight:700}
-.ck.eq:hover{background:rgba(201,168,76,.35)}
-.ck.zero{grid-column:span 2}
-.ck.clr{color:var(--neg)}
-</style>
 
-<button id="calcFab" onclick="toggleCalc()" title="계산기">🧮</button>
 
-<div id="calcModal">
-  <div id="calcDisplay">
-    <div id="calcExpr"></div>
-    <div id="calcScreen">0</div>
-    <div id="calcWon"></div>
-  </div>
-  <div class="calc-grid">
-    <button class="ck fn" onclick="calcAC()">AC</button>
-    <button class="ck fn" onclick="calcSign()">±</button>
-    <button class="ck fn" onclick="calcPct()">%</button>
-    <button class="ck op" onclick="calcOp('/')">÷</button>
-
-    <button class="ck" onclick="calcNum('7')">7</button>
-    <button class="ck" onclick="calcNum('8')">8</button>
-    <button class="ck" onclick="calcNum('9')">9</button>
-    <button class="ck op" onclick="calcOp('*')">×</button>
-
-    <button class="ck" onclick="calcNum('4')">4</button>
-    <button class="ck" onclick="calcNum('5')">5</button>
-    <button class="ck" onclick="calcNum('6')">6</button>
-    <button class="ck op" onclick="calcOp('-')">−</button>
-
-    <button class="ck" onclick="calcNum('1')">1</button>
-    <button class="ck" onclick="calcNum('2')">2</button>
-    <button class="ck" onclick="calcNum('3')">3</button>
-    <button class="ck op" onclick="calcOp('+')">+</button>
-
-    <button class="ck zero" onclick="calcNum('0')">0</button>
-    <button class="ck" onclick="calcDot()">.</button>
-    <button class="ck eq" onclick="calcEq()">=</button>
-  </div>
-</div>
+<a id="kakaoFab" href="https://open.kakao.com/o/stCoJKii" target="_blank" rel="noopener" aria-label="카카오톡 상담"><span class="kf-ico">💬</span><span class="kf-txt">카카오톡 상담</span></a>
 
 <script>
 // ── CALCULATOR ──
 let cVal = '0', cPrev = '', cOp = '', cFresh = false;
-
-function toggleCalc() {
-  const m = document.getElementById('calcModal');
-  m.style.display = m.style.display === 'block' ? 'none' : 'block';
-}
-document.addEventListener('click', e => {
-  if (!e.target.closest('#calcModal') && !e.target.closest('#calcFab'))
-    document.getElementById('calcModal').style.display = 'none';
-});
-
-function calcRender() {
-  const screen = document.getElementById('calcScreen');
-  const wonEl  = document.getElementById('calcWon');
-  screen.textContent = parseFloat(cVal).toLocaleString('ko-KR', {maximumFractionDigits:8});
-  const n = parseFloat(cVal);
-  if (!isNaN(n) && Math.abs(n) >= 10000) {
-    if (Math.abs(n) >= 1e8) wonEl.textContent = '≈ ' + (n/1e8).toFixed(2) + '억원';
-    else wonEl.textContent = '≈ ' + Math.round(n/10000).toLocaleString() + '만원';
-  } else { wonEl.textContent = ''; }
-}
-
-function calcNum(n) {
-  if (cFresh) { cVal = n; cFresh = false; }
-  else cVal = cVal === '0' ? n : cVal + n;
-  calcRender();
-}
-function calcDot() {
-  if (cFresh) { cVal = '0.'; cFresh = false; return; }
-  if (!cVal.includes('.')) cVal += '.';
-  calcRender();
-}
-function calcOp(op) {
-  const opSyms = {'/':'÷','*':'×','-':'−','+':'+'};
-  if (cPrev && cOp && !cFresh) calcEq(true);
-  cPrev = cVal; cOp = op; cFresh = true;
-  document.getElementById('calcExpr').textContent =
-    parseFloat(cPrev).toLocaleString('ko-KR') + ' ' + opSyms[op];
-}
-function calcEq(silent) {
-  if (!cPrev || !cOp) return;
-  const a = parseFloat(cPrev), b = parseFloat(cVal);
-  let r;
-  if (cOp==='+') r=a+b; else if (cOp==='-') r=a-b;
-  else if (cOp==='*') r=a*b; else if (cOp==='/') r = b===0 ? 'Error' : a/b;
-  const opSyms = {'/':'÷','*':'×','-':'−','+':'+'};
-  if (!silent) {
-    document.getElementById('calcExpr').textContent =
-      parseFloat(cPrev).toLocaleString('ko-KR') + ' ' + opSyms[cOp] + ' ' +
-      parseFloat(cVal).toLocaleString('ko-KR') + ' =';
-  }
-  cVal = r === 'Error' ? 'Error' : String(r);
-  cPrev = ''; cOp = ''; cFresh = true;
-  calcRender();
-}
-function calcAC()   { cVal='0'; cPrev=''; cOp=''; cFresh=false; document.getElementById('calcExpr').textContent=''; calcRender(); }
-function calcSign() { cVal = String(parseFloat(cVal)*-1); calcRender(); }
-function calcPct()  { cVal = String(parseFloat(cVal)/100); calcRender(); }
 </script>
 </body>
 </html>
